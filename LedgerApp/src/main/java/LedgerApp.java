@@ -1,5 +1,4 @@
 import java.io.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -36,6 +35,7 @@ public class LedgerApp {
                     break;
                 case "M":
                     displayFullLedgerMenu();
+                    break;
                 case "X":
                     running = false;
                     System.out.println("There's the door. Catch you on the flip side");
@@ -84,10 +84,14 @@ public class LedgerApp {
         String date = myScanner.nextLine();
         System.out.print("Enter payment description: ");
         String description = myScanner.nextLine();
-
-        saveToLedger(date,"-" + amount,description, "Payment");
+        System.out.println("Enter vendor: ");
+        String vendor = myScanner.nextLine();
+//        saveToLedger(date,"-" + amount,description,vendor, "Payment");
 
     }
+
+//    private static void saveToLedger(String date, String s, String description, String vendor, String payment) {
+//    }
 
     public static void displayLedger() throws IOException {
         System.out.println("\n===Ledger===");
@@ -102,16 +106,18 @@ public class LedgerApp {
             return;
 
         }
-        System.out.printf("Amount", "Date", "Description", "Type");
+        System.out.printf("Amount", "Date", "Description","Vendor", "Type");
     }
 
-    public static void saveToLedger(String amount, String date, String description, String type) {
+    public static void saveToLedger(String amount, String date, String description,String vendor,  String type, String payment) {
         try (FileWriter writer = new FileWriter(fileName, true)) {
             writer.append(amount)
                     .append(",")
                     .append(date)
                     .append(",")
                     .append(description)
+                    .append(",")
+                    .append(vendor)
                     .append(",")
                     .append(type)
                     .append("\n");
@@ -140,6 +146,7 @@ public class LedgerApp {
 
                     break;
                 case "D":
+//                    ledger isnt the right variable
                     displayLedger(ledger, "Deposit");
                     break;
                 case "P":
@@ -171,6 +178,7 @@ public class LedgerApp {
             System.out.println("0) Back to Ledger Menu");
             System.out.println("H) Home (Main Menu)");
             String userChoice = myScanner.nextLine().toUpperCase();
+//            switch-cases
 
         }
 
