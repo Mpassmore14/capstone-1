@@ -1,25 +1,24 @@
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
-public class Transaction {
-    LocalDateTime dateTime;
+public class Transaction { //todo: ask why the methods arent being called on
+    LocalDate date;
+
+    LocalTime time;
     String description;
     String vendor;
     double amount;
 
-    public Transaction(LocalDateTime dateTime, String description, String vendor, double amount) {
-        this.dateTime = dateTime;
+
+    public Transaction(LocalDate date, LocalTime time, String description, String vendor, double amount) {
+        this.date = date;
+        this.time = time;
         this.description = description;
         this.vendor = vendor;
         this.amount = amount;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
-    }
 
     public String getDescription() {
         return description;
