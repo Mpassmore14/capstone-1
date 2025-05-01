@@ -1,15 +1,13 @@
 import java.io.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
 
-public class LedgerApp {  //fixme: not even sure how this came about
+public class LedgerApp {
     static ArrayList<Transaction> ledger = new ArrayList<>();
 
     public static String fileName = "src/main/resources/Transactions.csv";
@@ -54,33 +52,23 @@ public class LedgerApp {  //fixme: not even sure how this came about
 
 
     }
-    // create methods for switch cases
+
 
     public static void addDeposit(Scanner myScanner) {
-        System.out.print("Insert how much you're depositing: ");
-        String userEntryString = myScanner.nextLine();
-        double amount = Double.parseDouble(userEntryString);
-
-        System.out.print("Enter date of deposit (yyyy-mm-dd): ");
-        String dateEntry = myScanner.nextLine();
-        LocalDate date = LocalDate.parse(dateEntry);
-////        System.out.print("Enter time of deposit (hh-mm-ss): ");
-//        String timeEntry = myScanner.nextLine();
-//        String dateTimeString = dateEntry + "T" + timeEntry;
-//        LocalDateTime dateTime = LocalDateTime.parse(dateTimeString);
-//        LocalDateTime today = LocalDateTime.now();
-//        System.out.println("time" + today);
-//
-//        System.out.print("Enter Details for deposit: ");
-//        String description = myScanner.nextLine();
-//
-//        System.out.print("Enter vendor for deposit: ");
-//        String vendor = myScanner.nextLine();
-//
-//        Transaction deposit = new Transaction(dateEntry, timeEntry, description, vendor, amount);
-//
-//        ledger.add(deposit);
-
+        System.out.print("Enter the deposit amount: ");
+        String amount = myScanner.nextLine();
+        System.out.print("Enter deposit date (yyyy-mm-dd): ");
+        String date = myScanner.nextLine();
+        System.out.println("Enter the time (hh:m): ");
+        String time = myScanner.nextLine();
+        System.out.print("Enter deposit description: ");
+        String description = myScanner.nextLine();
+        System.out.println("Enter vendor: ");
+        String vendor = myScanner.nextLine();
+        saveToLedger(date, "+" + amount, description, vendor, "Payment");
+        Transaction deposit;
+        deposit = new Transaction(date, time, description, vendor, amount);
+        ledger.add(deposit);
 
     }
 
@@ -89,19 +77,22 @@ public class LedgerApp {  //fixme: not even sure how this came about
         String amount = myScanner.nextLine();
         System.out.print("Enter payment date (yyyy-mm-dd): ");
         String date = myScanner.nextLine();
+        System.out.println("Enter the time (hh:m): ");
+        String time = myScanner.nextLine();
         System.out.print("Enter payment description: ");
         String description = myScanner.nextLine();
         System.out.println("Enter vendor: ");
         String vendor = myScanner.nextLine();
-//        saveToLedger(date,"-" + amount,description,vendor, "Payment");
-
+        saveToLedger(date, "-" + amount, description, vendor, "Payment");
+        Transaction payment;
+        payment = new Transaction(date, time, description, vendor, amount);
+        ledger.add(payment);
     }
 
-//    private static void saveToLedger(String date, String s, String description, String vendor, String payment) { // fixme: adjust savetoLedger to provide correct info
-//    }
-    static ArrayList<Transaction> loadLedger(String filePath ){
+    //    }
+    static ArrayList<Transaction> loadLedger(String filePath) {
         ArrayList<Transaction> tempLedger = new ArrayList<>();
-        try  {
+        try {
             FileReader myFileReader = new FileReader(fileName);
             BufferedReader bufferedReader = new BufferedReader(myFileReader);
 
@@ -132,7 +123,7 @@ public class LedgerApp {  //fixme: not even sure how this came about
 
     }
 
-    public static void saveToLedger(String amount, String date, String description, String vendor, String type) { //fixme: how to call on this method
+    public static Transaction saveToLedger(String amount, String date, String description, String vendor, String type) { //fixme: how to call on this method
         try (FileWriter writer = new FileWriter(fileName, true)) {
             writer.append(amount)
                     .append(",")
@@ -147,9 +138,11 @@ public class LedgerApp {  //fixme: not even sure how this came about
             System.out.println(type + "Has been saved successfully!");
         } catch (IOException e) {
             System.out.println("Uh oh.. slight problem mate" + e.getMessage());
+            ledger.add(saveToLedger(amount, date, description, vendor, type));
 
         }
 
+        return null;
     }
 
     public static void displayFullLedgerMenu() {
@@ -188,40 +181,64 @@ public class LedgerApp {  //fixme: not even sure how this came about
         }
     }
 
-//    private static void displayReportsMenu(ArrayList<Transaction> ledger) { Todo: understand which to use arrayList or hashmap
-//        Scanner myScanner = new Scanner(System.in);
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        while (true){
-//            System.out.println("\n===Reports Menu===");
-//            System.out.println("1) Month to Date");
-//            System.out.println("2) Previous Month");
-//            System.out.println("3)Year to Date");
-//            System.out.println("4) Previous Year");
-//            System.out.println("5) Search by Vendor");
-//            System.out.println("0) Back to Ledger Menu");
-//            System.out.println("H) Home (Main Menu)");
-//            String userChoice = myScanner.nextLine().toUpperCase();
-//            switch-cases
-public static void displayReportsMenu(List<Transaction> transactions) {  //fixme : finish hashmap with while/ for loop and if switch-case
-    Scanner myScanner = new Scanner(System.in);
-    HashMap<String, String> reportOptions = new HashMap<>();
-    reportOptions.put("1", "Month to Date");
-    reportOptions.put("2", "Previous Month");
-    reportOptions.put("3", "Year to Date");
-    reportOptions.put("4", "Previous Year");
-    reportOptions.put("5", "Search by Vendor");
-    reportOptions.put("0", "Back");
-    reportOptions.put("H", "Home page");
+
+    public static void displayReportsMenu(ArrayList<Transaction> transactions) {  //fixme : finish hashmap with while/ for loop and if switch-case
+        Scanner myScanner = new Scanner(System.in);
+        ArrayList<String> reportOptions = new ArrayList<>();
+        reportOptions.add("1) Month to Date");
+        reportOptions.add("2) Previous Month");
+        reportOptions.add("3) Year to Date");
+        reportOptions.add("4) Previous Year");
+        reportOptions.add("5) Search by Vendor");
+        reportOptions.add("0) Back");
+        reportOptions.add("H) Home page");
+        while (true) {
+            System.out.println("\n=== Reports Menu===");
+            for (String option : reportOptions) {
+                System.out.println(option);
+
+            }
+            System.out.print("Select an option your grace: ");
+            String choice = myScanner.nextLine().toUpperCase();
+            switch (choice) {
+                case "1":
+                    reportMonthToDate(transactions);
+                    break;
+                case "2":
+//                reportPreviousMonth(transactions);
+                    break;
+                case "3":
+//                reportYeartoDate(transactions);
+                    break;
+                case "4":
+//                reportPreviousYear(transactions);
+                    break;
+                case "5":
+//                searchByVendor(transactions);
+                    break;
+                case "0":
+                    return;
+                case "H":
+//                goToHomePage();
+                default:
+                    System.out.println("Cant pick that one. Try again darling.");
+            }
+        }
 
 
+    }
+
+    private static void reportMonthToDate(List<Transaction> transactions) {
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        System.out.println("\n---Month to Date---");
+        for (Transaction t : transactions) {
+
+        }
+    }
 }
 
 
-//    }
-
-//    private static void displayLedger(ArrayList<Transaction> ledger, String deposit) {
-//    }
-
-}
 
 

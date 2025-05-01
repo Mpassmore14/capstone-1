@@ -19,6 +19,9 @@ public class Transaction { //todo: ask why the methods arent being called on
         this.amount = amount;
     }
 
+    public Transaction(String date, String time, String description, String vendor, String amount) {
+    }
+
 
     public String getDescription() {
         return description;
