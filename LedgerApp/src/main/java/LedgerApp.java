@@ -89,7 +89,7 @@ public class LedgerApp {
         ledger.add(payment);
     }
 
-    //    }
+
     static ArrayList<Transaction> loadLedger(String filePath) {
         ArrayList<Transaction> tempLedger = new ArrayList<>();
         try {
@@ -98,7 +98,6 @@ public class LedgerApp {
 
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-
                 String[] parts = line.split("\\|");
                 LocalDate date = LocalDate.parse(parts[0]);
                 LocalTime time = LocalTime.parse(parts[1]);
@@ -108,7 +107,7 @@ public class LedgerApp {
 
                 // TODO: handle header
                 Transaction newTransaction = new Transaction(date, time, description, vendor, amount);
-                ledger.add(newTransaction);
+                tempLedger.add(newTransaction);
             }
         } catch (Exception e) {
             System.out.println("Error:" + e.getMessage());
@@ -118,9 +117,7 @@ public class LedgerApp {
 
     public static void displayLedger() throws IOException {
         System.out.println("\n===Ledger===");
-
         System.out.printf("Amount", "Date", "Description", "Vendor", "Type");
-
     }
 
     public static Transaction saveToLedger(String amount, String date, String description, String vendor, String type) { //fixme: how to call on this method
@@ -159,17 +156,16 @@ public class LedgerApp {
 
             switch (choice) {
                 case "A":
-
+                    allTransactions(myScanner);
                     break;
                 case "D":
-//                   fixme: is ledger the right variable? wouldn't it be transactions instead?
-//                    displayLedger(ledger, "Deposit");
+                    depositsOnly(myScanner);
                     break;
                 case "P":
-//                    displayLedger(ledger, "Payment");
+                    paymentsOnly(myScanner);
                     break;
                 case "R":
-//                    displayReportsMenu(ledger);
+                    //displayReportsMenu();
                     break;
                 case "X":
                     return;
@@ -179,6 +175,18 @@ public class LedgerApp {
 
             }
         }
+    }
+
+    private static void paymentsOnly(Scanner myScanner) {
+
+    }
+
+    private static void depositsOnly(Scanner myScanner) {
+
+    }
+
+    private static void allTransactions(Scanner myScanner) {
+
     }
 
 
@@ -205,21 +213,21 @@ public class LedgerApp {
                     reportMonthToDate(transactions);
                     break;
                 case "2":
-//                reportPreviousMonth(transactions);
+                    reportPreviousMonth(transactions);
                     break;
                 case "3":
-//                reportYeartoDate(transactions);
+                reportYeartoDate(transactions);
                     break;
                 case "4":
-//                reportPreviousYear(transactions);
+                reportPreviousYear(transactions);
                     break;
                 case "5":
-//                searchByVendor(transactions);
+                searchByVendor(transactions);
                     break;
                 case "0":
                     return;
                 case "H":
-//                goToHomePage();
+                goToHomePage();
                 default:
                     System.out.println("Cant pick that one. Try again darling.");
             }
@@ -228,17 +236,59 @@ public class LedgerApp {
 
     }
 
-    private static void reportMonthToDate(List<Transaction> transactions) {
+    private static void goToHomePage() {
+
+    }
+
+    private static void searchByVendor(ArrayList<Transaction> transactions) {
+
+    }
+
+    private static void reportPreviousYear(ArrayList<Transaction> transactions) {
+
+    }
+
+    private static void reportYeartoDate(ArrayList<Transaction> transactions) {
+
+    }
+
+
+    private static void reportMonthToDate(ArrayList<Transaction> transactions) {
         LocalDate today = LocalDate.now();
+        LocalDate firstOfMonth = today.withDayOfMonth(1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         System.out.println("\n---Month to Date---");
         for (Transaction t : transactions) {
+            String actions = String.valueOf(t.getDate());
+            LocalDate weee = LocalDate.parse(actions, formatter);
+            if (weee.compareTo(firstOfMonth) >= 0 && weee.compareTo(today) <= 0) {
+                System.out.println(t);
+
+            }
 
         }
+
+
     }
+
+    private static void reportPreviousMonth (ArrayList<Transaction> transactions) {
+        LocalDate todays = LocalDate.now();
+        LocalDate lastDay = todays.withDayOfMonth(1).minusDays(1);
+        LocalDate firstDay = lastDay.withDayOfMonth(1);
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        System.out.println("\n---Previous Month Report---");
+        for (Transaction t : transactions) {
+            String dateString = String.valueOf(t.getDate());
+            LocalDate x = LocalDate.parse(dateString, format);
+            if (x.compareTo(firstDay) >= 0 && x.compareTo(lastDay) <= 0) {
+                System.out.println(t);
+
+            }
+        }
+
+
+    }
+
 }
-
-
-
 

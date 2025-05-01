@@ -19,6 +19,22 @@ public class Transaction { //todo: ask why the methods arent being called on
         this.amount = amount;
     }
 
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public Transaction(String date, String time, String description, String vendor, String amount) {
     }
 
@@ -46,6 +62,7 @@ public class Transaction { //todo: ask why the methods arent being called on
     public void setAmount(double amount) {
         this.amount = amount;
     }
+
 
 
 }
