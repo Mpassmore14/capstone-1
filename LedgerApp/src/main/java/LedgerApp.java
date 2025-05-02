@@ -1,7 +1,6 @@
 import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -98,6 +97,7 @@ public class LedgerApp {
         ledger.add(payment);
         saveToLedger();
     }
+
     static ArrayList<Transaction> loadLedger() {
         ArrayList<Transaction> tempLedger = new ArrayList<>();
         try {
@@ -122,10 +122,11 @@ public class LedgerApp {
         }
         return tempLedger;
     }
+
     public static void displayLedger() {
         System.out.println("\n===Ledger===");
         System.out.println("Amount, Date, Description, Vendor, Type");
-        for (Transaction t: ledger){
+        for (Transaction t : ledger) {
             System.out.println((t.getDate() + "|" + t.getTime() + "|" + t.getDescription() + "|" + t.getVendor() + "|" + t.getAmount()));
         }
     }
@@ -250,6 +251,17 @@ public class LedgerApp {
     }
 
     private static void searchByVendor(ArrayList<Transaction> transactions) {
+        Scanner myScanner = new Scanner(System.in);
+        System.out.print("Enter Vendor name: ");
+        String searchVendor = myScanner.nextLine().toLowerCase();
+        System.out.println("\n---Vendor Search :" + searchVendor);
+        for (Transaction t : transactions) {
+            if (t.getVendor().equals(searchVendor)) {
+                System.out.println(t);
+            }
+
+        }
+
 
     }
 
